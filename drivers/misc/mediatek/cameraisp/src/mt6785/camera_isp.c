@@ -982,69 +982,67 @@ void CAMSYS_MET_Events_Trace(bool enter,
 	u32 reg_module,
 	enum ISP_IRQ_TYPE_ENUM cam)
 {
-	if (enter) {
-		int imgo_en = 0, rrzo_en = 0;
-		int imgo_bpp, rrzo_bpp, imgo_xsize, imgo_ysize;
-		int rrzo_xsize, rrzo_ysize, rrz_src_w;
-		int rrz_src_h, rrz_dst_w;
-		int rrz_dst_h, rrz_hori_step, rrz_vert_step;
-		u32 ctl_dma_en, rrz_in, rrz_out;
-		u32 ctl_en, ctl_en2;
+    if (enter) {
+        int imgo_en = 0, rrzo_en = 0, imgo_bpp, rrzo_bpp;
+        int imgo_xsize, imgo_ysize, rrzo_xsize, rrzo_ysize;
+        int rrz_src_w, rrz_src_h, rrz_dst_w, rrz_dst_h;
+        int rrz_hori_step, rrz_vert_step;
+        u32 ctl_dma_en, rrz_in, rrz_out;
+        u32 ctl_en, ctl_en2;
+        struct isp_pass1_cam_event_args args;
+        
+        if (sec_on) {
+            ctl_dma_en = lock_reg.CAM_REG_CTL_DMA_EN[reg_module];
+            ctl_en = lock_reg.CAM_REG_CTL_EN[reg_module];
+            ctl_en2 = lock_reg.CAM_REG_CTL_EN2[reg_module];
+        } else {
+            ctl_dma_en = ISP_RD32(CAM_REG_CTL_DMA_EN(reg_module));
+            ctl_en = ISP_RD32(CAM_REG_CTL_EN(reg_module));
+            ctl_en2 = ISP_RD32(CAM_REG_CTL_EN2(reg_module));
+        }
 
-		if (sec_on) {
-			ctl_dma_en = lock_reg.CAM_REG_CTL_DMA_EN[
-				reg_module];
-			ctl_en = lock_reg.CAM_REG_CTL_EN[
-				reg_module];
-			ctl_en2 = lock_reg.CAM_REG_CTL_EN2[
-				reg_module];
-		} else {
-			ctl_dma_en = ISP_RD32(
-				CAM_REG_CTL_DMA_EN(reg_module));
-			ctl_en = ISP_RD32(
-				CAM_REG_CTL_EN(reg_module));
-			ctl_en2 = ISP_RD32(
-				CAM_REG_CTL_EN2(reg_module));
-		}
+        rrz_in = ISP_RD32(CAM_REG_RRZ_IN_IMG(reg_module));
+        rrz_out = ISP_RD32(CAM_REG_RRZ_OUT_IMG(reg_module));
+        imgo_en = ctl_dma_en & 0x1;
+        rrzo_en = ctl_dma_en & 0x4;
+        imgo_bpp = MET_Event_Get_BPP(_imgo_, reg_module);
+        rrzo_bpp = MET_Event_Get_BPP(_rrzo_, reg_module);
+        imgo_xsize = (int)(ISP_RD32(CAM_REG_IMGO_XSIZE(reg_module)) & 0xFFFF);
+        imgo_ysize = (int)(ISP_RD32(CAM_REG_IMGO_YSIZE(reg_module)) & 0xFFFF);
+        rrzo_xsize = (int)(ISP_RD32(CAM_REG_RRZO_XSIZE(reg_module)) & 0xFFFF);
+        rrzo_ysize = (int)(ISP_RD32(CAM_REG_RRZO_YSIZE(reg_module)) & 0xFFFF);
+        rrz_src_w = rrz_in & 0xFFFF;
+        rrz_src_h = (rrz_in >> 16) & 0xFFFF;
+        rrz_dst_w = rrz_out & 0xFFFF;
+        rrz_dst_h = (rrz_out >> 16) & 0xFFFF;
+        rrz_hori_step = (int)(ISP_RD32(CAM_REG_RRZ_HORI_STEP(reg_module)) & 0x3FFFF);
+        rrz_vert_step = (int)(ISP_RD32(CAM_REG_RRZ_VERT_STEP(reg_module)) & 0x3FFFF);
 
-		rrz_in = ISP_RD32(CAM_REG_RRZ_IN_IMG(
-			reg_module));
-		rrz_out = ISP_RD32(CAM_REG_RRZ_OUT_IMG(
-			reg_module));
-		imgo_en = ctl_dma_en & 0x1;
-		rrzo_en = ctl_dma_en & 0x4;
-		imgo_bpp = MET_Event_Get_BPP(
-			_imgo_, reg_module);
-		rrzo_bpp = MET_Event_Get_BPP(
-			_rrzo_, reg_module);
-		imgo_xsize = (int)(ISP_RD32(
-			CAM_REG_IMGO_XSIZE(reg_module)) & 0xFFFF);
-		imgo_ysize = (int)(ISP_RD32(
-			CAM_REG_IMGO_YSIZE(reg_module)) & 0xFFFF);
-		rrzo_xsize = (int)(ISP_RD32(
-			CAM_REG_RRZO_XSIZE(reg_module)) & 0xFFFF);
-		rrzo_ysize = (int)(ISP_RD32(
-			CAM_REG_RRZO_YSIZE(reg_module)) & 0xFFFF);
-		rrz_src_w = rrz_in & 0xFFFF;
-		rrz_src_h = (rrz_in >> 16) & 0xFFFF;
-		rrz_dst_w = rrz_out & 0xFFFF;
-		rrz_dst_h = (rrz_out >> 16) & 0xFFFF;
-		rrz_hori_step = (int)(ISP_RD32(
-			CAM_REG_RRZ_HORI_STEP(reg_module)) & 0x3FFFF);
-		rrz_vert_step = (int)(ISP_RD32(
-			CAM_REG_RRZ_VERT_STEP(reg_module)) & 0x3FFFF);
+        args = (struct isp_pass1_cam_event_args) {
+            .hw_module = cam,
+            .imgo_en = imgo_en,
+            .rrzo_en = rrzo_en,
+            .imgo_bpp = imgo_bpp,
+            .rrzo_bpp = rrzo_bpp,
+            .imgo_w_in_byte = imgo_xsize,
+            .imgo_h_in_byte = imgo_ysize,
+            .rrzo_w_in_byte = rrzo_xsize,
+            .rrzo_h_in_byte = rrzo_ysize,
+            .rrz_src_w = rrz_src_w,
+            .rrz_src_h = rrz_src_h,
+            .rrz_dst_w = rrz_dst_w,
+            .rrz_dst_h = rrz_dst_h,
+            .rrz_hori_step = rrz_hori_step,
+            .rrz_vert_step = rrz_vert_step,
+            .ctl_en = ctl_en,
+            .ctl_dma_en = ctl_dma_en,
+            .ctl_en2 = ctl_en2
+        };
 
-		trace_ISP__Pass1_CAM_enter(cam, imgo_en, rrzo_en,
-			imgo_bpp, rrzo_bpp,
-			imgo_xsize, imgo_ysize,
-			rrzo_xsize, rrzo_ysize,
-			rrz_src_w, rrz_src_h,
-			rrz_dst_w, rrz_dst_h,
-			rrz_hori_step, rrz_vert_step,
-			ctl_en, ctl_dma_en, ctl_en2);
-	} else {
-		trace_ISP__Pass1_CAM_leave(cam, 0);
-	}
+        trace_ISP__Pass1_CAM_enter(&args);
+    } else {
+        trace_ISP__Pass1_CAM_leave(cam, 0);
+    }
 }
 #endif
 
