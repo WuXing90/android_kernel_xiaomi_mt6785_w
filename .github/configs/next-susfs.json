@@ -2,13 +2,13 @@
   {
     "kernelSource": {
       "name": "begonia",
-      "repo": "https://github.com/wodanesdag/android_kernel_xiaomi_mt6785",
-      "branch": "susfs",
+      "repo": "https://github.com/WuXing90/android_kernel_xiaomi_mt6785_w",
+      "branch": "16-dev",
       "device": "begonia",
       "defconfig": "begonia_user_defconfig"
     },
-    "withKernelSU": true,
-    "withSuSFS": true,
+    "withKernelSU": false,
+    "withSuSFS": false,
     "toolchains": [
       {
         "repo": "https://gitlab.com/crdroidandroid/android_prebuilts_clang_host_linux-x86_clang-r547379",
@@ -22,8 +22,8 @@
       "ARCH": "arm64",
       "CC": "clang-crDroid/bin/clang",
       "externalCommand": {
-        "KBUILD_BUILD_HOST": "LEGION",
-        "KBUILD_BUILD_USER": "wodanesdag",
+        "KBUILD_BUILD_HOST": "wuxin",
+        "KBUILD_BUILD_USER": "wuxinG90",
         "CROSS_COMPILE": "clang-crDroid/bin/aarch64-linux-gnu-",
         "CROSS_COMPILE_ARM32": "clang-crDroid/bin/arm-linux-gnueabi-",
         "LD": "clang-crDroid/bin/ld.lld",
