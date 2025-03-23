@@ -39,7 +39,7 @@ TRACE_EVENT(deadline_load,
 );
 
 TRACE_EVENT(deadline_task,
-	TP_PROTO(char name[MDW_DEV_NAME_SIZE],
+	TP_PROTO(char *name,
 		 bool enter, u64 apu_loading),
 	TP_ARGS(name, enter, apu_loading),
 	TP_STRUCT__entry(
