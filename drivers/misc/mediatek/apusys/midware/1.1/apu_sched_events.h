@@ -18,8 +18,8 @@
 #include <linux/tracepoint.h>
 #include "mdw_rsc.h"
 TRACE_EVENT(deadline_load,
-	TP_PROTO(char name[MDW_DEV_NAME_SIZE],
-		 u64 avg_load[3]),
+	TP_PROTO(char *name,
+ 		 u64 *avg_load),
 	TP_ARGS(name, avg_load),
 	TP_STRUCT__entry(
 		__array(char, name, MDW_DEV_NAME_SIZE)
