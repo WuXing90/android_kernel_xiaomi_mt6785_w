@@ -8,7 +8,7 @@
       "defconfig": "begonia_user_defconfig"
     },
     "withKernelSU": true,
-    "withSuSFS": true,
+    "withSuSFS": false,
     "toolchains": [
       {
         "repo": "https://gitlab.com/crdroidandroid/android_prebuilts_clang_host_linux-x86_clang-r547379",
