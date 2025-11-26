@@ -2,7 +2,7 @@
   {
     "kernelSource": {
       "name": "begonia",
-      "repo": "https://github.com/Saikrishna1504/kernel_xiaomi_mt6785",
+      "repo": "https://github.com/WuXing90/kernel_xiaomi_mt6785",
       "branch": "bka",
       "device": "begonia",
       "defconfig": "begonia_user_defconfig"
