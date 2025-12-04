@@ -2,8 +2,8 @@
   {
     "kernelSource": {
       "name": "begonia",
-      "repo": "https://github.com/WuXing90/kernel_xiaomi_mt6785",
-      "branch": "erofs-test",
+      "repo": "https://github.com/WuXing90/mt6785_kernel_4.19",
+      "branch": "t",
       "device": "begonia",
       "defconfig": "begonia_user_defconfig"
     },
