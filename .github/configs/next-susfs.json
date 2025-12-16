@@ -2,10 +2,10 @@
   {
     "kernelSource": {
       "name": "begonia",
-      "repo": "https://github.com/WuXing90/kernel_xiaomi_mt6785",
-      "branch": "backport-5.4",
+      "repo": "https://gitlab.postmarketos.org/mt6785-mainline/linux",
+      "branch": "6.16",
       "device": "begonia",
-      "defconfig": "begonia_user_defconfig"
+      "defconfig": "defconfig"
     },
     "withKernelSU": false,
     "withSuSFS": false,
