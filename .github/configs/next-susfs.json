@@ -2,8 +2,8 @@
   {
     "kernelSource": {
       "name": "begonia",
-      "repo": "https://github.com/WuXing90/hyperOS_kernel_erofs",
-      "branch": "bka",
+      "repo": "https://github.com/WuXing90/begonia_kernel_dev",
+      "branch": "bpf-5.10",
       "device": "begonia",
       "defconfig": "begonia_user_defconfig"
     },
